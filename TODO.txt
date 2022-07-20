@@ -1,0 +1,49 @@
+./backend/package.json:  "description": "Serverless TODO image app",
+./backend/serverless.yml:# TODO: Change the name of the org 
+./backend/serverless.yml:    TODOS_TABLE: Todos-${self:provider.stage}
+./backend/serverless.yml:    TODOS_CREATED_AT_INDEX: CreatedAtIndex
+./backend/serverless.yml:  # TODO: Configure this function - 
+./backend/serverless.yml:  # TODO: Configure this function - 
+./backend/serverless.yml:  # TODO: Configure this function
+./backend/serverless.yml:  # TODO: Configure this function
+./backend/serverless.yml:  # TODO: Configure this function
+./backend/serverless.yml:    # TODO: Fill the properties
+./backend/serverless.yml:    # TODO: Create a DynamoDB table with local secondary index and a composite key
+./backend/serverless.yml:    # TODO: Complete the bucket properties below. 
+./backend/serverless.yml:    # TODO: Complete the policy below and attach it to the bucket defined above
+./backend/src/requests/CreateTodoRequest.ts: * Fields in a request to create a single TODO item.
+./backend/src/requests/UpdateTodoRequest.ts: * Fields in a request to update a single TODO item.
+./backend/src/helpers/todosAcess.ts:// TODO: Implement the dataLayer logic
+./backend/src/helpers/attachmentUtils.ts:// TODO: Implement the fileStogare logic
+./backend/src/helpers/todos.ts:// TODO: Implement businessLogic
+./backend/src/lambda/auth/auth0Authorizer.ts:// TODO: Provide a URL that can be used to download a certificate that can be used
+./backend/src/lambda/auth/auth0Authorizer.ts:  // TODO: Implement token verification
+./backend/src/lambda/http/updateTodo.ts:    // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+./backend/src/lambda/http/deleteTodo.ts:    // TODO: Remove a TODO item by id
+./backend/src/lambda/http/getTodos.ts:// TODO: Get all TODO items for a current user
+./backend/src/lambda/http/generateUploadUrl.ts:    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
+./backend/src/lambda/http/createTodo.ts:    // TODO: Implement creating a new TODO item
+./README.md:# Serverless TODO
+./README.md:To implement this project, you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all comments starting with the `TODO:` in the code to find the placeholders that you need to implement.
+./README.md:This application will allow creating/removing/updating/fetching TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created.
+./README.md:# TODO items
+./README.md:The application should store TODO items, and each TODO item contains the following fields:
+./README.md:* `name` (string) - name of a TODO item (e.g. "Change a light bulb")
+./README.md:* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a TODO item
+./README.md:You might also store an id of a user who created a TODO item.
+./README.md:* `GetTodos` - should return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+./README.md:* `CreateTodo` - should create a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
+./README.md:It receives a new TODO item to be created in JSON format that looks like this:
+./README.md:It should return a new TODO item that looks like this:
+./README.md:* `UpdateTodo` - should update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateTodoRequest.ts` file
+./README.md:It receives an object that contains three fields that can be updated in a TODO item:
+./README.md:* `DeleteTodo` - should delete a TODO item created by a current user. Expects an id of a TODO item to remove.
+./README.md:* `GenerateUploadUrl` - returns a pre-signed URL that can be used to upload an attachment file for a TODO item.
+./README.md:To store TODO items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
+./README.md:    TableName: ${self:provider.environment.TODOS_TABLE}
+./README.md:This should start a development server with the React application that will interact with the serverless TODO application.
+./client/src/config.ts:// TODO: Once your application is deployed, copy an API id here so that the frontend could interact with it
+./client/src/config.ts:  // TODO: Create an Auth0 application and copy values from it into this map. For example:
+./client/src/components/Todos.tsx:        <Header as="h1">TODOs</Header>
+./client/src/components/Todos.tsx:          Loading TODOs
+./Final Project.postman_collection.json:			"name": "TODOs",
