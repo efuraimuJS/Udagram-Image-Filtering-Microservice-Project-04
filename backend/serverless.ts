@@ -24,7 +24,7 @@ const serverlessConfiguration: AWS = {
     ],
     provider: {
         name: 'aws',
-        region: 'sa-east-1',
+        region: 'us-east-1',
         runtime: 'nodejs14.x',
         stage: "${opt:stage, 'dev'}",
         tracing: { apiGateway: true, lambda: true },

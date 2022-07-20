@@ -8,8 +8,8 @@
         "sls-offline": "serverless offline",
         "dynamoDB-start": "serverless dynamodb start",
         "offline": "run-p -l dynamoDB-start sls-offline",
-        "deploy": "serverless deploy --verbose --aws-profile %AWS_PROFILE%",
-        "remove": "serverless remove --verbose --aws-profile %AWS_PROFILE%"
+        "deploy": "serverless deploy --verbose --aws-profile echo $AWS_PROFILE",
+        "remove": "serverless remove --verbose --aws-profile echo $AWS_PROFILE"
     },
     "engines": {
         "node": ">=14.15.0"
