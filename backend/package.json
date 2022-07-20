@@ -1,34 +1,62 @@
 {
-  "name": "serverless-todo-app",
-  "version": "1.0.0",
-  "description": "Serverless TODO image app",
-  "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/http-errors": "^1.6.1",
-    "aws-xray-sdk": "^2.2.0",
-    "axios": "^0.18.0",
-    "http-errors": "^1.7.2",
-    "jsonwebtoken": "^8.5.1",
-    "middy": "^0.27.0",
-    "source-map-support": "^0.5.11",
-    "uuid": "^3.3.2",
-    "winston": "^3.2.1"
-  },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.17",
-    "@types/jsonwebtoken": "^8.3.2",
-    "@types/node": "^10.14.4",
-    "aws-sdk": "^2.433.0",
-    "serverless-aws-documentation": "^1.1.0",
-    "serverless-iam-roles-per-function": "^3.2.0-e97ab49",
-    "serverless-plugin-canary-deployments": "^0.4.7",
-    "serverless-plugin-tracing": "^2.0.0",
-    "serverless-reqvalidator-plugin": "^1.0.3",
-    "serverless-webpack": "^5.2.0",
-    "ts-loader": "^5.3.3",
-    "typescript": ">=3.8.0",
-    "webpack": "^4.29.6"
-  },
-  "author": "Ivan Mushketyk",
-  "license": "MIT"
+    "name": "serverless-todo-backend",
+    "version": "1.0.0",
+    "description": "Serverless TODO backend image app",
+    "main": "serverless.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "sls-offline": "serverless offline",
+        "dynamoDB-start": "serverless dynamodb start",
+        "offline": "run-p -l dynamoDB-start sls-offline",
+        "deploy": "serverless deploy --verbose --aws-profile %AWS_PROFILE%",
+        "remove": "serverless remove --verbose --aws-profile %AWS_PROFILE%"
+    },
+    "engines": {
+        "node": ">=14.15.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dtmarangoni/serverless-todo.git"
+    },
+    "dependencies": {
+        "@middy/core": "^2.0.1",
+        "@middy/http-cors": "^2.0.1",
+        "@middy/http-json-body-parser": "^2.0.1",
+        "aws-xray-sdk": "^3.3.1",
+        "axios": "^0.21.1",
+        "http-errors": "^1.7.2",
+        "jsonwebtoken": "^8.5.1",
+        "jwks-rsa": "^2.0.3",
+        "source-map-support": "^0.5.19",
+        "uuid": "^8.3.2",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@serverless/typescript": "^2.23.0",
+        "@types/aws-lambda": "^8.10.71",
+        "@types/http-errors": "^1.6.1",
+        "@types/jsonwebtoken": "^8.3.2",
+        "@types/node": "^14.14.25",
+        "aws-sdk": "^2.433.0",
+        "json-schema-to-ts": "^1.5.0",
+        "npm-run-all": "^4.1.5",
+        "serverless": "^2.23.0",
+        "serverless-aws-documentation": "^1.1.0",
+        "serverless-dynamodb-local": "^0.2.39",
+        "serverless-iam-roles-per-function": "^3.1.0",
+        "serverless-offline": "^6.9.0",
+        "serverless-pseudo-parameters": "^2.5.0",
+        "serverless-s3-local": "^0.6.14",
+        "serverless-s3-remover": "^0.6.0",
+        "serverless-webpack": "^5.3.5",
+        "ts-loader": "^8.0.15",
+        "ts-node": "^9.1.1",
+        "tsconfig-paths": "^3.9.0",
+        "tsconfig-paths-webpack-plugin": "^3.3.0",
+        "typescript": "^4.1.3",
+        "webpack": "^5.20.2",
+        "webpack-node-externals": "^2.5.2"
+    },
+    "author": "Daniel Tortosa Marangoni",
+    "license": "MIT"
 }
