@@ -1,40 +1,35 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { getUserId } from '../utils';
-import { deleteTodo } from '../../bussinessLogic/todos';
-import { createLogger } from '../../utils/logger';
+import * as middy from 'middy'
+import { cors } from 'middy/middlewares'
+import { APIGatewayProxyEvent, APIGatewayProxyResult, } from 'aws-lambda'
+import { createLogger } from '../../utils/logger'
+import { deleteTodo, getTodoById } from '../../logic/main/todos'
+import { getUserId } from '../utils'
 
-const logger = createLogger('deleteTodo');
+const logger = createLogger('deleteTodo')
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info('Processing event: ', {event: event});
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const todoId = event.pathParameters.todoId
+  const userId = getUserId(event)
+  const result = await getTodoById(userId, todoId)
 
-  const todoId = event.pathParameters.todoId;
-  const userId = getUserId(event);
-
-  try{
-    await deleteTodo(todoId, userId);
-    logger.info('Deleted todoId and its userId: ', { todoId, userId });
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: ''
-   };
-  } catch(err) {
-    logger.error('Unable to delete item. Error JSON:', { error: JSON.stringify(err, null, 2) } );
-
+  if (result.Count === 0) {
+    logger.warn(`User ${userId} requesting DELETE for non-existing todo with ID: ${todoId}`)
     return {
       statusCode: 400,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: ''
-    };
+      body: JSON.stringify(`Todo does not exist`)
+    }
   }
-}
+
+  logger.info(`Deleting todo ${todoId} for user ${userId}`)
+  await deleteTodo(userId, todoId)
+  return {
+    statusCode: 200,
+    body: ''
+  }
+}).use(
+  cors({
+    credentials: true
+  })
+)

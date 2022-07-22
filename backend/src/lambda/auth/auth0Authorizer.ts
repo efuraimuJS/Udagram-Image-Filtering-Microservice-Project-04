@@ -6,10 +6,10 @@ import { createLogger } from '../../utils/logger'
 import Axios from 'axios'
 import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
+import jwkToPem from 'jwk-to-pem'
 
 const logger = createLogger('auth')
 
-// to verify JWT token signature.
 const jwksUrl = 'https://dev-74ecthwq.us.auth0.com/.well-known/jwks.json'
 
 export const handler = async (
@@ -53,23 +53,14 @@ export const handler = async (
 }
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
-
-  if(!authHeader) {
-    throw new Error('No authentication header');
-  }
-
-  if(!authHeader.toLocaleLowerCase().startsWith('bearer ')) {
-    throw new Error('Invalid authentication header');
-  }
-
   const token = getToken(authHeader)
-  const certificate = await getCertificate(jwksUrl);
+  const jwt: Jwt = decode(token, { complete: true }) as Jwt
+  if (!jwt) throw new Error('Token is invalid')
 
-  if(!certificate) {
-    throw new Error('Invalid certificate');
-  }
-                                  
-  return verify(token, certificate, {algorithms: ['RS256']}) as JwtPayload;
+  const res = await Axios.get(jwksUrl);
+  const pem = jwkToPem(res['data']['keys'][0])
+  var verifed = verify(token, pem, {algorithms: ['RS256']})
+  return verifed as JwtPayload
 }
 
 function getToken(authHeader: string): string {
@@ -82,16 +73,4 @@ function getToken(authHeader: string): string {
   const token = split[1]
 
   return token
-}
-
-async function getCertificate(jwksUrl: string){
-  try{
-    const response = await Axios.get(jwksUrl);
-    const key = response['data']['keys'][0]['x5c'][0];
-    const cert = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`;
-    return cert
-  }
-  catch (error){
-    logger.error('Getting certificate failed',error)
-   }
 }

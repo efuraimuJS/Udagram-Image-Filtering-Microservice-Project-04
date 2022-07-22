@@ -1,43 +1,37 @@
-import 'source-map-support/register';
+import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest';
-import { getUserId } from '../utils';
-import { updateTodo } from '../../bussinessLogic/todos';
-import { createLogger } from '../../utils/logger';
+import * as middy from 'middy'
+import { cors } from 'middy/middlewares'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
+import { updateTodo, getTodoById } from '../../logic/main/todos'
+import { createLogger } from '../../utils/logger'
+import { getUserId } from '../utils'
 
-const logger = createLogger('updateTodo');
+const logger = createLogger('updateTodo')
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info('Processing event: ', {event: event});
-
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
-  const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
-  const userId = getUserId(event);
+  const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
+  const userId = getUserId(event)
+  const result = await getTodoById(userId, todoId)
 
-  try {
-    await updateTodo(updatedTodo, todoId, userId);
-    logger.info('A todo is updated', {updatedItem: updateTodo});
-
+  if (result.Count === 0) {
+    logger.warn(`User ${userId} requesting UPDATE for non-existing todo with ID: ${todoId}`)
     return {
-      statusCode: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: ''
-    };
-
-  } catch (e) {
-    logger.error("error:", { error: e.message });
-
-    return {
-      statusCode: 404,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: `error ${e}`
-    };
+      statusCode: 400,
+      body: JSON.stringify(`TODO does not exist`)
+    }
   }
-}
+  
+  logger.info(`User ${userId} updating todo ${todoId} with data ${updatedTodo}`)
+  await updateTodo(userId, todoId, updatedTodo)
+  return {
+    statusCode: 200,
+    body: ''
+  }
+}).use(
+  cors({
+    credentials: true
+  })
+)

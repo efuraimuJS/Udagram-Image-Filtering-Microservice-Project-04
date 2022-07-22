@@ -1,45 +1,29 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
-import { createTodo } from '../../bussinessLogic/todos';
-import { createLogger } from '../../utils/logger';
+import { createTodo } from '../../logic/main/todos'
+import { getUserId } from '../utils'
+import { createLogger } from '../../utils/logger'
+import * as middy from 'middy'
+import { cors } from 'middy/middlewares'
 
-const logger = createLogger('creteToDo');
+const logger = createLogger('createTodo')
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info('Processing event: ', {event: event});
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const newTodo: CreateTodoRequest = JSON.parse(event.body)
+  const userId = getUserId(event)
 
-  const newTodo: CreateTodoRequest = JSON.parse(event.body);
-  const authorization = event.headers.Authorization;
-  const split = authorization.split(' ');
-  const jwtToken = split[1];
-
-  try {
-    const newItem = await createTodo(newTodo, jwtToken);
-    logger.info('A new toDo item is created: ', {item: newItem});
-  
-    return {
-      statusCode: 201,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: JSON.stringify({
-        item: newItem
-      })
-    }
-  } catch(e) {
-    logger.info('An error is occured on creating a todo: ', { error: e.message });
-
-    return {
-      statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: ''
-    }
+  logger.info(`Creating new todo ${newTodo} for user ${userId}`)
+  const newTodoItem = await createTodo(userId, newTodo)
+  return {
+    statusCode: 201,
+    body: JSON.stringify({
+      item: newTodoItem
+    })
   }
-
-}
+}).use(
+  cors({
+    credentials: true
+  })
+)

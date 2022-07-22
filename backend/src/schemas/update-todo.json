@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema#",
+    "title": "update-todo",
+    "type":"object",
+    "properties": {
+        "name":{
+            "type":"string",
+            "minLength": 1
+        },
+        "dueDate":{
+            "type":"string",
+            "minLength": 1
+        },
+        "done":{
+            "type":"boolean"
+        }
+    },
+    "required":[
+        "name",
+        "dueDate",
+        "done"
+    ],
+    "additionalProperties": false
+}
