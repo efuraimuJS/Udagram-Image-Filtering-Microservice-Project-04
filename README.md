@@ -3,7 +3,7 @@
 To implement this project, you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all comments starting with the `TODO:` in the code to find the placeholders that you need to implement.
 
 # TODO demo
-[![Watch the video]()](https://youtu.be/Subqul2KV1o)
+[![Watch the video](https://i9.ytimg.com/vi_webp/Subqul2KV1o/mqdefault.webp?v=62db02c7&sqp=CMCD7JYG&rs=AOn4CLCCyS2_JCN7gmoyrR_t7FP5vRT3VA)](https://youtu.be/Subqul2KV1o)
 
 
 # Functionality of the application
