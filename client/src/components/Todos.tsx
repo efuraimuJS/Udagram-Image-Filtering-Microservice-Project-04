@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import dateFormat from 'dateformat'
 import { History } from 'history'
 import update from 'immutability-helper'
